@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CatchPhish — Real-Time URL Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">CATCHPHISH</span>
+    </div>
+    <div class="tagline">Two-Tier Real-Time Phishing Detection · Explainable ML</div>
+    <div class="status-pill" id="apiStatus"><span class="dot"></span> checking backend…</div>
+  </header>
+
+  <main class="layout">
+
+    <section class="scan-panel">
+
+      <div class="scan-bar">
+        <div class="scan-input-wrap">
+          <span class="scan-input-icon">›</span>
+          <input id="urlInput" class="scan-input" type="text"
+                 placeholder="paste a url — e.g. paypal-secure-login.tk/verify"
+                 autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="mode-toggle" role="tablist" aria-label="Scan mode">
+          <button class="mode-btn active" data-mode="fast" id="modeFast">FAST</button>
+          <button class="mode-btn" data-mode="deep" id="modeDeep">DEEP</button>
+        </div>
+        <button class="scan-btn" id="scanBtn">Scan</button>
+      </div>
+      <div class="sweep-track" id="sweepTrack"><div class="sweep-line" id="sweepLine"></div></div>
+      <div class="mode-hint" id="modeHint">Fast mode reads only URL structure — no page fetch, sub-second. Switches to Deep automatically if the verdict is uncertain.</div>
+
+      <div class="result-empty" id="resultEmpty">
+        <div class="empty-glyph">◈</div>
+        <div>Run a scan to see the tiered verdict, risk score, and the model's reasoning here.</div>
+      </div>
+
+      <div class="result-card" id="resultCard" hidden>
+        <div class="result-top">
+          <div>
+            <div class="result-url" id="resultUrl">—</div>
+            <div class="result-domain" id="resultDomain">—</div>
+          </div>
+          <div class="verdict-badge" id="verdictBadge">—</div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">PHISHING RISK SCORE</div>
+          <div class="score-bar-track">
+            <div class="score-bar-fill" id="scoreBarFill"></div>
+          </div>
+          <div class="score-value" id="scoreValue">0</div>
+        </div>
+
+        <div class="tier-trace" id="tierTrace"></div>
+
+        <div class="reasons-block">
+          <div class="reasons-title">WHY THIS VERDICT</div>
+          <div class="reasons-list" id="reasonsList"></div>
+        </div>
+
+        <div class="fetch-error" id="fetchError" hidden></div>
+      </div>
+
+    </section>
+
+    <aside class="history-panel">
+      <div class="history-title">SCAN HISTORY</div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">No scans yet this session.</div>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="footer">
+    Tier-1 model: XGBoost on 21 lexical/host features · Tier-2: +28 content features on live page fetch · SHAP-explained
+  </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

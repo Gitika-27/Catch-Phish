@@ -1,0 +1,19 @@
+# venvs
+backend/venv/
+code/venv/
+
+# node
+frontend-react/node_modules/
+
+# python cache
+__pycache__/
+*.pyc
+
+# logs / runtime data
+*.log
+scan_history.json
+
+# env secrets
+.env
+.env.*
+!.env.example
