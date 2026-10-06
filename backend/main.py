@@ -10,6 +10,7 @@ import risk_engine
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRONTEND_DIR = os.path.join(os.path.dirname(BASE_DIR), 'frontend')
 HISTORY_FILE = os.path.join(BASE_DIR, 'scan_history.json')
+HISTORY_LIMIT = int(os.getenv("HISTORY_LIMIT", "200"))
 app = FastAPI(title='CatchPhish API')
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
 
@@ -23,7 +24,8 @@ def _load_history():
     return []
 
 def _save_history(history):
-    with open(HISTORY_FILE, 'w') as f: json.dump(history[-50:], f, indent=2)
+    with open(HISTORY_FILE, 'w') as f:json.dump(history[-HISTORY_LIMIT:], f, indent=2)
+
 
 def _record(result):
     history = _load_history(); history.append({'id': result['id'], 'url': result['url'], 'tier': result['final_tier'],
