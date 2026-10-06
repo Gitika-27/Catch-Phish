@@ -71,11 +71,18 @@ def scan(req: ScanRequest):
     if req.mode == 'deep' or fast['tier'] == 'Suspicious':
         t1 = time.time(); content, meta = extract_content_features(url)
         if meta.get('error'):
-            error = meta['error']; result['fetch_error'] = 'page could not be fetched safely: ' + error[:100]
+            error = meta['error']; result['fetch_error'] = ('The page could not be fetched within the safety timeout. '
+                                                            'The URL was still analyzed using its URL and domain features. '
+                                                            + error[:100]
+                                                           )
+
         else:
             deep = risk_engine.score_deep({**lexical, **content}); deep['reasons'] = heuristics + deep['reasons']; deep['reason_headline'] = risk_engine.explanation_headline(deep['tier'], deep['reasons'], heuristics)
-            summary = {'page_title': meta.get('title') or '(no title found)', 'has_password_field': bool(content.get('HasPasswordField')),
-                'has_hidden_fields': bool(content.get('HasHiddenFields')), 'has_external_form_submit': bool(content.get('HasExternalFormSubmit')),
+            summary = summary = {'analysis_mode': 'static_html',
+                                 'dynamic_javascript_not_rendered': True,
+                                 'page_title': meta.get('title') or '(no title found)',
+                                 'has_password_field': bool(content.get('HasPasswordField')),
+                                 'has_hidden_fields': bool(content.get('HasHiddenFields')), 'has_external_form_submit': bool(content.get('HasExternalFormSubmit')),
                 'num_iframes': content.get('NoOfiFrame', 0), 'num_redirects': content.get('NoOfURLRedirect', 0), 'num_external_links': content.get('NoOfExternalRef', 0),
                 'num_self_links': content.get('NoOfSelfRef', 0), 'num_images': content.get('NoOfImage', 0), 'num_scripts': content.get('NoOfJS', 0),
                 'has_favicon': bool(content.get('HasFavicon')), 'is_responsive': bool(content.get('IsResponsive')), 'domain_title_match': content.get('DomainTitleMatchScore', 0),
