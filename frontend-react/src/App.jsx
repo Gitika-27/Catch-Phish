@@ -51,8 +51,7 @@ export default function App() {
         refreshHistory();
       }
     } catch {
-      alert("Could not reach the CatchPhish API. Check the Render service or your VITE_API_URL setting.");
-    } finally {
+      alert("The CatchPhish API may be waking up on Render. Please wait 30–60 seconds and try the scan again.");
       setScanning(false);
     }
   }, [url, mode, scanning, refreshHistory]);
