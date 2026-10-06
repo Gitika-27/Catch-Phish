@@ -157,7 +157,7 @@ def extract_lexical_host_features(url: str) -> dict:
     }, domain, scheme
 
 
-def extract_content_features(url: str, timeout: float = 6.0) -> tuple[dict, dict]:
+def extract_content_features(url: str, timeout: float = 10.0) -> tuple[dict, dict]:
     import requests
     from bs4 import BeautifulSoup
     meta = {'error': None, 'title': None, 'final_url': url}
@@ -188,7 +188,7 @@ def extract_content_features(url: str, timeout: float = 6.0) -> tuple[dict, dict
                 self_ref += 1
         text = soup.get_text(' ', strip=True).lower()
         try:
-            robots = int(requests.get(f'{urlparse(resp.url).scheme}://{domain}/robots.txt', timeout=3).status_code == 200)
+            robots = int(requests.get(f'{urlparse(resp.url).scheme}://{domain}/robots.txt',timeout=5,headers={'User-Agent': 'Mozilla/5.0 (CatchPhish-Scanner/1.0)'}).status_code == 200)
         except Exception:
             robots = 0
         return {
